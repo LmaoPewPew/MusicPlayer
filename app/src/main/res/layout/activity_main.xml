@@ -47,19 +47,13 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="24dp"
-        android:text="Artist:\n\nTitle:\n\nAlbum:"
+        android:text="Artist:\n\nTitle:\n\nAlbum:\t"
         app:layout_constraintBottom_toTopOf="@+id/changeSongBtn"
         app:layout_constraintEnd_toEndOf="@+id/changeSongBtn"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/changeSongBtn"
         app:layout_constraintTop_toBottomOf="@+id/songtxt"
+        app:layout_constraintVertical_bias="0.0"
         tools:ignore="HardcodedText" />
-
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/changeSongBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

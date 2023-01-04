@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
 
-        Drawable drawable = menu.getItem(0).getIcon(); // change 0 with 1,2 ...
+        Drawable drawable = menu.getItem(0).getIcon();
         drawable.mutate();
         drawable.setColorFilter(getResources().getColor(R.color.purple_200), PorterDuff.Mode.SRC_IN);
 
@@ -88,11 +88,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if (item.getItemId() == R.id.item_Request) {
-            if (!checkPermission()) {
                 createToast("Show how to request permission");
-                Intent myIntent = new Intent(getApplicationContext(), Allow_Permission.class);
+                Intent myIntent = new Intent(getApplicationContext(),  Tutorial.class);
                 startActivity(myIntent);
-            } else createToast("Permission already Granted!");
         }
         return super.onOptionsItemSelected(item);
     }

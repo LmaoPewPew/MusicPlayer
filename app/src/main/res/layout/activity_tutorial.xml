@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/i4"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Tutorial">
+
+    <ScrollView
+        android:layout_width="409dp"
+        android:layout_height="729dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/SbS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Step by Step on how to Turn on your Permissions"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/s1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Step 1: When This Pops Up, Close the App"
+                app:layout_constraintStart_toStartOf="@+id/SbS"
+                app:layout_constraintTop_toBottomOf="@+id/SbS" />
+
+            <ImageView
+                android:id="@+id/i1"
+                android:layout_width="match_parent"
+                android:layout_height="76dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/s1"
+                app:layout_constraintStart_toStartOf="@+id/s1"
+                app:layout_constraintTop_toBottomOf="@+id/s1"
+                app:srcCompat="@drawable/_nopermtoast" />
+
+            <TextView
+                android:id="@+id/s2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:text="Step 2: Open Settings"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/s1" />
+
+            <ImageView
+                android:id="@+id/i2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/s2"
+                app:layout_constraintStart_toStartOf="@+id/s2"
+                app:layout_constraintTop_toBottomOf="@+id/s2"
+                app:srcCompat="@drawable/_settingsapp" />
+
+            <TextView
+                android:id="@+id/s3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Step 3: Open &quot;Apps&quot; "
+                app:layout_constraintStart_toStartOf="@+id/SbS"
+                app:layout_constraintTop_toBottomOf="@+id/space" />
+
+            <ImageView
+                android:id="@+id/i3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/_insettings" />
+
+            <TextView
+                android:id="@+id/s4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Step 4: Open our App"
+                app:layout_constraintEnd_toEndOf="@+id/s2"
+                app:layout_constraintTop_toTopOf="@+id/s3" />
+
+            <ImageView
+                android:id="@+id/im4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/_appslist" />
+
+            <TextView
+                android:id="@+id/s5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Step 5:  Are Permissions Allowed or Not?"
+                app:layout_constraintStart_toStartOf="@+id/s3"
+                app:layout_constraintTop_toBottomOf="@+id/space2" />
+
+            <ImageView
+                android:id="@+id/i5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/_appperm" />
+
+            <TextView
+                android:id="@+id/s6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Step 6: Allow needed Permissions" />
+
+            <ImageView
+                android:id="@+id/i6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/_actperm" />
+
+            <TextView
+                android:id="@+id/s7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="\n\n\nWhen everything is done,\n Restart the App and Listen to your favorite Music\n\n\n"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
