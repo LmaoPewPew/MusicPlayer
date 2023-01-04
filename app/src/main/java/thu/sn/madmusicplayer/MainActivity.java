@@ -88,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if (item.getItemId() == R.id.item_Request) {
-                createToast("Show how to request permission");
-                Intent myIntent = new Intent(getApplicationContext(),  Tutorial.class);
-                startActivity(myIntent);
+            createToast("Show how to request permission");
+            Intent myIntent = new Intent(getApplicationContext(), Tutorial.class);
+            startActivity(myIntent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -199,7 +199,8 @@ public class MainActivity extends AppCompatActivity {
 
                 songInfo.setText(songs.get(random));
 
-            } else createToast("Please allow the app to access your storage!");
+            } else
+                createToast("Please allow the app to access your storage!\n If you don't know how to do that, click on the menu button in the top right corner");
         } catch (IOException e) {
             e.printStackTrace();
             Log.d("Error", "changeSongToRandom: " + e.getMessage());
