@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
             createToast("Show how to request permission");
             Intent myIntent = new Intent(getApplicationContext(), Tutorial.class);
             startActivity(myIntent);
+            mediaPlayer.pause();
+            isPaused = true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -120,9 +122,7 @@ public class MainActivity extends AppCompatActivity {
         //set text color
         songTxt.setTextColor(getTextColor());
         songInfo.setTextColor(getTextColor());
-
     }
-
 
     @NonNull
     @Contract(" -> new")
