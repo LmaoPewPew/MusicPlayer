@@ -199,8 +199,11 @@ public class MainActivity extends AppCompatActivity {
 
                 songInfo.setText(songs.get(random));
 
-            } else
-                createToast("Please allow the app to access your storage!\n If you don't know how to do that, click on the menu button in the top right corner");
+            } else {
+                createToast("Please allow the app to access your storage!");
+                Toast.makeText(this, "If you don't know how to do that, click on the menu button in the top right corner", Toast.LENGTH_LONG).show();
+
+            }
         } catch (IOException e) {
             e.printStackTrace();
             Log.d("Error", "changeSongToRandom: " + e.getMessage());
