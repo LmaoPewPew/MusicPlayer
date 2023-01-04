@@ -1,15 +1,18 @@
 package thu.sn.madmusicplayer;
 
-import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -46,11 +49,6 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer mediaPlayer;
     TextView songInfo;
 
-    //TODO:
-    // check permission
-    // randomize songs
-    // Ex 7
-    // Ex 9
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         songInfo = findViewById(R.id.songInfo);
 
         setSettings(btnPlay, btnSongChange, songInfo);
-        requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE}, 1);
+        requestPermissions(new String[]{READ_EXTERNAL_STORAGE}, 1);
 
         //MusicPlayer Methods
         mediaPlayer = new MediaPlayer();
@@ -77,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
 
+        Drawable drawable = menu.getItem(0).getIcon(); // change 0 with 1,2 ...
+        drawable.mutate();
+        drawable.setColorFilter(getResources().getColor(R.color.purple_200), PorterDuff.Mode.SRC_IN);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -86,8 +88,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if (item.getItemId() == R.id.item_Request) {
-            requestPermissions(new String[]{MANAGE_EXTERNAL_STORAGE}, 1);
-            createToast("Requesting permission");
+            if (!checkPermission()) {
+                createToast("Show how to request permission");
+                Intent myIntent = new Intent(getApplicationContext(), Allow_Permission.class);
+                startActivity(myIntent);
+            } else createToast("Permission already Granted!");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -100,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
         //declare the text views
         TextView songTxt = findViewById(R.id.songtxt);
 
-
         // set Status bar color
         getWindow().setStatusBarColor(setThemeColor().getColor());
         Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(setThemeColor());
@@ -109,15 +113,15 @@ public class MainActivity extends AppCompatActivity {
         btnPlay.setBackgroundColor(setThemeColor().getColor());
         btnSongChange.setBackgroundColor(setThemeColor().getColor());
         // set Button text color
-        btnPlay.setTextColor(setTextColor());
-        btnSongChange.setTextColor(setTextColor());
+        btnPlay.setTextColor(getTextColor());
+        btnSongChange.setTextColor(getTextColor());
         // set Button Text Size
         btnPlay.setTextSize(20);
         btnSongChange.setTextSize(20);
 
         //set text color
-        songTxt.setTextColor(setTextColor());
-        songInfo.setTextColor(setTextColor());
+        songTxt.setTextColor(getTextColor());
+        songInfo.setTextColor(getTextColor());
 
     }
 
@@ -136,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private int setTextColor() {
+    private int getTextColor() {
         int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         switch (nightModeFlags) {
             case Configuration.UI_MODE_NIGHT_YES:
@@ -146,6 +150,10 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return Color.GRAY;
         }
+    }
+
+    public void createToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -233,17 +241,9 @@ public class MainActivity extends AppCompatActivity {
         cur.close();
     }
 
-
     private boolean checkPermission() {
-        int res = getApplicationContext().checkCallingOrSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        // return (res == PackageManager.PERMISSION_GRANTED);
-
-        return true;
-    }
-
-
-    public void createToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        int res = checkCallingOrSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 }
 

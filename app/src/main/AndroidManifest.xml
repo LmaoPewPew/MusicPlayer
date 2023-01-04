@@ -15,6 +15,14 @@
         android:theme="@style/Theme.MADMusicPlayer"
         tools:targetApi="31">
         <activity
+            android:name=".Allow_Permission"
+            android:exported="false"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:configChanges="orientation"
             android:exported="true">
