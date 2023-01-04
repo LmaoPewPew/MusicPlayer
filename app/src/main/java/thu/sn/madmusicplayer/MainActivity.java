@@ -6,7 +6,6 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -16,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,49 +26,50 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import org.jetbrains.annotations.Contract;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean paused = true;
+    private boolean isPaused = true;
+    boolean hasOncePlayed = false;
+
     List<String> songs = new ArrayList<>();
-    ContentResolver cr;
+    List<String> songPath = new ArrayList<>();
+
+    ContentResolver contentResolver;
     MediaPlayer mediaPlayer;
     TextView songInfo;
-
 
     //TODO:
     // check permission
     // randomize songs
     // Ex 7
     // Ex 9
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // declare Views
         Button btnPlay = findViewById(R.id.btnPlay);
         Button btnSongChange = findViewById(R.id.changeSongBtn);
+        songInfo = findViewById(R.id.songInfo);
 
-        songInfo = findViewById(R.id.songTxtInfo);
-        mediaPlayer = new MediaPlayer();
-
-        ///////////////////////////
-        setWindowColor();
-        setSettings(btnPlay, btnSongChange);
+        setSettings(btnPlay, btnSongChange, songInfo);
         requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE}, 1);
-        ///////////////////////////
 
-        songs = getMusicList();
-        addSongsToMediaPlayer(mediaPlayer, songs);
+        //MusicPlayer Methods
+        mediaPlayer = new MediaPlayer();
+        getMusicList();
         btnPlay.setOnClickListener(v -> playPauseButton(btnPlay));
-        btnSongChange.setOnClickListener(v -> changeRandomSong());
+        btnSongChange.setOnClickListener(v -> changeSongToRandom(btnPlay));
     }
 
     @Override
@@ -86,30 +87,40 @@ public class MainActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.item_Request) {
             requestPermissions(new String[]{MANAGE_EXTERNAL_STORAGE}, 1);
+            createToast("Requesting permission");
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    /****/
-    private void setSettings(Button btnPlay, Button btnSongChange) {
+    /**
+     * DESIGN_START
+     **/
+    private void setSettings(Button btnPlay, Button btnSongChange, TextView songInfo) {
+
+        //declare the text views
+        TextView songTxt = findViewById(R.id.songtxt);
+
+
+        // set Status bar color
+        getWindow().setStatusBarColor(setThemeColor().getColor());
+        Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(setThemeColor());
+
+        // set Button BG color
         btnPlay.setBackgroundColor(setThemeColor().getColor());
-        btnPlay.setTextColor(setTextColor());
         btnSongChange.setBackgroundColor(setThemeColor().getColor());
+        // set Button text color
+        btnPlay.setTextColor(setTextColor());
         btnSongChange.setTextColor(setTextColor());
+        // set Button Text Size
         btnPlay.setTextSize(20);
         btnSongChange.setTextSize(20);
 
-        ///////////////////////////
+        //set text color
+        songTxt.setTextColor(setTextColor());
         songInfo.setTextColor(setTextColor());
-        TextView txt = findViewById(R.id.songtxt);
-        txt.setTextColor(setTextColor());
+
     }
 
-    public void setWindowColor() {
-        getWindow().setStatusBarColor(setThemeColor().getColor());
-        Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(setThemeColor());
-    }
 
     @NonNull
     @Contract(" -> new")
@@ -137,44 +148,65 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    /***/
+    /**
+     * DESIGN_END
+     **/
 
     @SuppressLint("SetTextI18n")
     private void playPauseButton(Button btnPlay) {
-        if (checkPermission()) {
-            if (paused) {
-                paused = false;
-                btnPlay.setText("II Pause");
-                mediaPlayer.start();
-            } else {
-                paused = true;
+        if (hasOncePlayed) {
+            if (isPaused) {
+                isPaused = false;
                 btnPlay.setText("▶ Play");
                 mediaPlayer.pause();
+            } else {
+                isPaused = true;
+                btnPlay.setText("II Pause");
+                mediaPlayer.start();
             }
-
-            songInfo.setText("Interpret: " + songs.get(1) + "\n\nTitle: " + songs.get(2) + "\n\nAlbum: " + songs.get(3));
-        } else createToast("Please allow the app to access your storage!");
+        } else createToast("No song has been selected");
     }
 
 
-    private void changeRandomSong() {
-        if (checkPermission()) {
-            int random = (int) (Math.random() * songs.size());
+    @SuppressLint("SetTextI18n")
+    private void changeSongToRandom(Button btnPlay) {
+        try {
+            if (checkPermission()) {
+                int random = (int) (Math.random() * songs.size());
+                hasOncePlayed = true;
 
-            songInfo.setText(random);
-        } else createToast("Please allow the app to access your storage!");
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(songPath.get(random));
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                } else {
+                    isPaused = true;
+                    btnPlay.setText("II Pause");
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(songPath.get(random));
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                    mediaPlayer.setLooping(true);
+                }
 
+                songInfo.setText(songs.get(random));
+
+            } else createToast("Please allow the app to access your storage!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("Error", "changeSongToRandom: " + e.getMessage());
+        }
     }
 
     @SuppressLint("Range")
-    public List<String> getMusicList() {
+    public void getMusicList() {
 
-        List<String> vs = new ArrayList<>();
-        cr = getContentResolver();
+        contentResolver = getContentResolver();
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
-        Cursor cur = cr.query(songUri, null, null, null, null);
+        Cursor cur = contentResolver.query(songUri, null, null, null, null);
 
         if (cur.getCount() > 0) {
             while (cur.moveToNext()) {
@@ -186,37 +218,26 @@ public class MainActivity extends AppCompatActivity {
 
                 if (cur.getInt(cur.getColumnIndex(MediaStore.Audio.AudioColumns.IS_MUSIC)) > 0) {
 
-                    Cursor pCur = cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, MediaStore.Audio.AudioColumns._ID + "=?", new String[]{id}, null);
+                    Cursor pCur = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, MediaStore.Audio.AudioColumns._ID + "=?", new String[]{id}, null);
 
                     while (pCur.moveToNext()) {
                         @SuppressLint("Range") String path = pCur.getString(pCur.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
-                        vs.add(path);
-                        vs.add(artist);
-                        vs.add(title);
-                        vs.add(album);
+                        songPath.add(path);
+                        songs.add("Artist:   " + artist + "\n\nTitle:   " + title + "\n\nAlbum:   " + album);
                     }
                     pCur.close();
                 }
             }
         }
+
         cur.close();
-        return vs;
     }
 
-    public void addSongsToMediaPlayer(MediaPlayer mediaPlayer, List<String> songs) {
-        for (String song : songs) {
-            try {
-                mediaPlayer.setDataSource(song);
-                mediaPlayer.prepare();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     private boolean checkPermission() {
         int res = getApplicationContext().checkCallingOrSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-       // return (res == PackageManager.PERMISSION_GRANTED);
+        // return (res == PackageManager.PERMISSION_GRANTED);
+
         return true;
     }
 

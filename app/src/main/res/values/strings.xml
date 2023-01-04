@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MAD MusicPlayer</string>
-    <string name="randomly_select_new">Randomly Select New!</string>
+    <string name="randSel">Randomly Select New Song!</string>
     <string name="song">Song</string>
-    <string name="play">Play/ Pause</string>
+    <string name="play">Play / Pause</string>
+    <string name="info"> <u><b>Song Info:</b></u></string>
 </resources>

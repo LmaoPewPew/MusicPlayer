@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/randomly_select_new"
+        android:text="@string/randSel"
         app:layout_constraintBottom_toTopOf="@+id/btnPlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -37,22 +37,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Song"
+        android:text="@string/info"
         app:layout_constraintStart_toStartOf="@+id/changeSongBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/songTxtInfo"
+        android:id="@+id/songInfo"
         android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:text="Artist: \n\nTitle: \n\nAlbum:"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:text="Artist:\n\nTitle:\n\nAlbum:"
         app:layout_constraintBottom_toTopOf="@+id/changeSongBtn"
         app:layout_constraintEnd_toEndOf="@+id/changeSongBtn"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/changeSongBtn"
         app:layout_constraintTop_toBottomOf="@+id/songtxt"
-        app:layout_constraintVertical_bias="0.509"
         tools:ignore="HardcodedText" />
 
     <Space
